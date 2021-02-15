@@ -1,4 +1,103 @@
 # 用筷子接收请求并响应 json 数据
-``` js
+##### 描述请求？
+当提到一个请求，我们平时怎么描述？
++ **路径**，比如 ```/home/user```
++ **方法**，比如 ```get```、```post```、```delete```
++ **路径参数**，比如 ```/home/user?id=3```，其中 ```id: 3``` 就是路径参数
++ **json 数据**
++ ...
 
+##### handler
+使用筷子时，你只需要写一个方法，然后告诉筷子：
+**这个方法处理什么样的请求**就行了
+大家经常把**处理请求的方法，叫做 handler**
+
+##### 上码
+``` js
+const { server, router } = require('kuaizi')
+
+router.addHandler({
+  path: '/hello',
+  handler() {
+    return 'hi yo~'
+  }
+})
+
+server.start(8888)
 ```
+先不管上面写了啥，先运行一下吧！你应该会看到：
+``` bash
+2021-02-15T12:09:04.744Z   收集到路由：GET /hello
+2021-02-15T12:09:04.821Z   started on 8888
+```
+这就表明你的第一个筷子程序跑了起来
+
+打开浏览器，访问 [http://localhost:8888/hello](http://localhost:8888/hello)
+你应该会看到 ```{ "errCode": 0, "data": "hi yo~" }```
+
+我想，如果你熟悉网站开发，应该大致知道上面的代码做了什么
++ 第一行：加载**筷子**
++ 第二行：空行
++ 第三行：向 router 对象，添加了一个 handler
++ 第五~六行：是处理请求的 handler
++ 第四行：声明这个 handler 处理*路径为 ```/hello``` 的请求*
++ 第七行：空行
++ 第八行：启动一个 http 服务器，监听 8888 端口
+
+再看刚刚的 handler，它只返回了一个字符串 ```hi yo~```
+也就是你访问过 [http://localhost:8888/hello](http://localhost:8888/hello)，所返回的
+你可以试试修改一下这个字符串
+
+##### http 方法呢？
+如果你不明说，筷子会把新添加的 handler 用来处理*get 类型的请求*
+如果你想让这个 handler 处理 post 请求，只需要在 ```path: '/hello'``` 上面加一行 ```method: 'post'```：
+``` js
+const { server, router } = require('kuaizi')
+
+router.addHandler({
+  method: 'post',
+  path: '/hello',
+  handler() {
+    return 'hi yo~'
+  }
+})
+
+server.start(8888)
+```
+
+挺简单的吧！
+
+# 解析请求里的数据
+很多时候，发来的请求里会带有数据，比如：
++ 查询 id 为 xxxx 的用户的信息：请求里会有 ```id=xxxx```
++ 添加一个用户：请求里会有*用户信息*
+
+##### 路径参数
+> 往宽了说，写在路径里的参数都是路径参数
+比如，假定有这样一个请求链接：[http://localhost:8888/user?id=2333](http://localhost:8888/user?id=2)
+意图很明显：它想获取 id 为 2333 的用户的信息
+看看筷子怎么处理：
+``` js
+const { server, router } = require('kuaizi')
+
+router.addHandler({
+  path: '/user',
+  handler(ctx){
+    let param = ctx.getParam()
+    return `你想获取 id 为 ${ param.id } 的用户的信息`
+  }
+})
+
+server.start(8888)
+```
+你只需要把目光聚焦在 4~7 行：
++ 第四行：这个 handler 处理路径为 ```/user``` 的请求
++ 潜台词：默认处理 ```get``` 类型的请求
++ 第五行：和之前不一样，这个 handler 多了一个参数 ```ctx```
++ 第六行：调用了 ctx 的 getParam 方法，**获取到了全部的“路径参数”**
++ 第七行：……
+
+重新运行一下，快试试 [http://localhost:8888/user?id=2333](http://localhost:8888/user?id=2)
+
+##### json 数据
+[待完成]
