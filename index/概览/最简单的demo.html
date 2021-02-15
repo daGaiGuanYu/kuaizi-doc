@@ -1,0 +1,68 @@
+<link rel="stylesheet" href="../../style.css"/>
+<title>最简单的demo</title><aside><ul><li><a href="#section-1.1">用筷子接收请求并响应&nbsp;json&nbsp;数据</a><ul><li><a href="#section-1.1-3.1">描述请求？</a><ul></ul></li><li><a href="#section-1.1-3.2">handler</a><ul></ul></li><li><a href="#section-1.1-3.3">上码</a><ul></ul></li><li><a href="#section-1.1-3.4">http&nbsp;方法呢？</a><ul></ul></li></ul></li><li><a href="#section-1.2">解析请求里的数据</a><ul><li><a href="#section-1.2-3.4">路径参数</a><ul></ul></li><li><a href="#section-1.2-3.5">json&nbsp;数据</a><ul></ul></li></ul></li></ul></aside><article><section id=section-1.1><h1>用筷子接收请求并响应&nbsp;json&nbsp;数据</h1><section id=section-1.1-3.1><h3>描述请求？</h3><p>当提到一个请求，我们平时怎么描述？
+</p><ul><li><b>路径</b>，比如&nbsp;<span class="special-txt">/home/user</span></li><li><b>方法</b>，比如&nbsp;<span class="special-txt">get</span>、<span class="special-txt">post</span>、<span class="special-txt">delete</span></li><li><b>路径参数</b>，比如&nbsp;<span class="special-txt">/home/user?id=3</span>，其中&nbsp;<span class="special-txt">id:&nbsp;3</span>&nbsp;就是路径参数</li><li><b>json&nbsp;数据</b></li><li>...</li></ul><p>
+</p></section><section id=section-1.1-3.2><h3>handler</h3><p>使用筷子时，你只需要写一个方法，然后告诉筷子：
+</p><p><b>这个方法处理什么样的请求</b>就行了
+</p><p>大家经常把<b>处理请求的方法，叫做&nbsp;handler</b>
+</p><p>
+</p></section><section id=section-1.1-3.3><h3>上码</h3><div class="special-block-container js"><div class="special-block-item">const { server, router } = require('kuaizi')
+</div><div class="special-block-item">
+</div><div class="special-block-item">router.addHandler({
+</div><div class="special-block-item">  path: '/hello',
+</div><div class="special-block-item">  handler() {
+</div><div class="special-block-item">    return 'hi yo~'
+</div><div class="special-block-item">  }
+</div><div class="special-block-item">})
+</div><div class="special-block-item">
+</div><div class="special-block-item">server.start(8888)
+</div></div><p>先不管上面写了啥，先运行一下吧！你应该会看到：
+</p><div class="special-block-container bash"><div class="special-block-item">2021-02-15T12:09:04.744Z   收集到路由：GET /hello
+</div><div class="special-block-item">2021-02-15T12:09:04.821Z   started on 8888
+</div></div><p>这就表明你的第一个筷子程序跑了起来
+</p><p>
+</p><p>打开浏览器，访问&nbsp;<a href="http://localhost:8888/hello" title="http://localhost:8888/hello">http://localhost:8888/hello</a>
+</p><p>你应该会看到&nbsp;<span class="special-txt">{&nbsp;&quot;errCode&quot;:&nbsp;0,&nbsp;&quot;data&quot;:&nbsp;&quot;hi&nbsp;yo~&quot;&nbsp;}</span>
+</p><p>
+</p><p>我想，如果你熟悉网站开发，应该大致知道上面的代码做了什么
+</p><ul><li>第一行：加载<b>筷子</b></li><li>第二行：空行</li><li>第三行：向&nbsp;router&nbsp;对象，添加了一个&nbsp;handler</li><li>第五~六行：是处理请求的&nbsp;handler</li><li>第四行：声明这个&nbsp;handler&nbsp;处理<i>路径为&nbsp;<span class="special-txt">/hello</span>&nbsp;的请求</i></li><li>第七行：空行</li><li>第八行：启动一个&nbsp;http&nbsp;服务器，监听&nbsp;8888&nbsp;端口</li></ul><p>
+</p><p>再看刚刚的&nbsp;handler，它只返回了一个字符串&nbsp;<span class="special-txt">hi&nbsp;yo~</span>
+</p><p>也就是你访问过&nbsp;<a href="http://localhost:8888/hello" title="http://localhost:8888/hello">http://localhost:8888/hello</a>，所返回的
+</p><p>你可以试试修改一下这个字符串
+</p><p>
+</p></section><section id=section-1.1-3.4><h3>http&nbsp;方法呢？</h3><p>如果你不明说，筷子会把新添加的&nbsp;handler&nbsp;用来处理<i>get&nbsp;类型的请求</i>
+</p><p>如果你想让这个&nbsp;handler&nbsp;处理&nbsp;post&nbsp;请求，只需要在&nbsp;<span class="special-txt">path:&nbsp;'/hello'</span>&nbsp;上面加一行&nbsp;<span class="special-txt">method:&nbsp;'post'</span>：
+</p><div class="special-block-container js"><div class="special-block-item">const { server, router } = require('kuaizi')
+</div><div class="special-block-item">
+</div><div class="special-block-item">router.addHandler({
+</div><div class="special-block-item">  method: 'post',
+</div><div class="special-block-item">  path: '/hello',
+</div><div class="special-block-item">  handler() {
+</div><div class="special-block-item">    return 'hi yo~'
+</div><div class="special-block-item">  }
+</div><div class="special-block-item">})
+</div><div class="special-block-item">
+</div><div class="special-block-item">server.start(8888)
+</div></div><p>
+</p><p>挺简单的吧！
+</p><p>
+</p></section></section><section id=section-1.2><h1>解析请求里的数据</h1><p>很多时候，发来的请求里会带有数据，比如：
+</p><ul><li>查询&nbsp;id&nbsp;为&nbsp;xxxx&nbsp;的用户的信息：请求里会有&nbsp;<span class="special-txt">id=xxxx</span></li><li>添加一个用户：请求里会有<i>用户信息</i></li></ul><p>
+</p><section id=section-1.2-3.4><h3>路径参数</h3><div class="comment-container"><div class="comment-item">往宽了说，写在路径里的参数都是路径参数</div></div><p>比如，假定有这样一个请求链接：<a href="http://localhost:8888/user?id=2" title="http://localhost:8888/user?id=2">http://localhost:8888/user?id=2333</a>
+</p><p>意图很明显：它想获取&nbsp;id&nbsp;为&nbsp;2333&nbsp;的用户的信息
+</p><p>看看筷子怎么处理：
+</p><div class="special-block-container js"><div class="special-block-item">const { server, router } = require('kuaizi')
+</div><div class="special-block-item">
+</div><div class="special-block-item">router.addHandler({
+</div><div class="special-block-item">  path: '/user',
+</div><div class="special-block-item">  handler(ctx){
+</div><div class="special-block-item">    let param = ctx.getParam()
+</div><div class="special-block-item">    return `你想获取 id 为 ${ param.id } 的用户的信息`
+</div><div class="special-block-item">  }
+</div><div class="special-block-item">})
+</div><div class="special-block-item">
+</div><div class="special-block-item">server.start(8888)
+</div></div><p>你只需要把目光聚焦在&nbsp;4~7&nbsp;行：
+</p><ul><li>第四行：这个&nbsp;handler&nbsp;处理路径为&nbsp;<span class="special-txt">/user</span>&nbsp;的请求</li><li>潜台词：默认处理&nbsp;<span class="special-txt">get</span>&nbsp;类型的请求</li><li>第五行：和之前不一样，这个&nbsp;handler&nbsp;多了一个参数&nbsp;<span class="special-txt">ctx</span></li><li>第六行：调用了&nbsp;ctx&nbsp;的&nbsp;getParam&nbsp;方法，<b>获取到了全部的“路径参数”</b></li><li>第七行：……</li></ul><p>
+</p><p>重新运行一下，快试试&nbsp;<a href="http://localhost:8888/user?id=2" title="http://localhost:8888/user?id=2">http://localhost:8888/user?id=2333</a>
+</p><p>
+</p></section><section id=section-1.2-3.5><h3>json&nbsp;数据</h3><p>[待完成]</p></section></section></article><ul class="interpage-nav"><li class="prev"><a href="环境准备.html">环境准备</a></li></ul>
