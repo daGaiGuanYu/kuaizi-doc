@@ -1,0 +1,30 @@
+# 简单是原则
+后端不是什么复杂的东西，真正需要的东西很少
+因此**筷子**也非常简单
+
+# 创建项目
+> 如果你了解 node，可以跳过本部分
+
+##### 安装 node
+**筷子**是构建在 node 上面的，因此，你需要先安装 node
++ [windows 安装包下载链接](https://nodejs.org/zh-cn/)，下载后，双击、下一步、下一步……
++ [linux、mac 安装教程](https://blog.csdn.net/csdn372301467/article/details/85938702)
+
+##### 初始化项目
++ 打开命令行工具（比如 windows 的 cmd），切换到你的工作目录（或者，，，，哪都行），创建一个文件夹（这个文件夹，将存放你马上要创建的项目），名字随便起
++ **初始化项目** 进入这个文件夹，并且输入 ```npm init -y```（npm 是 node 自带的一个工具）
++ **安装筷子** ```npm install kuaizi```
+
+##### Hello, World
+在新创建的文件夹里，创建一个文件，名字随便起（但后缀名最好是 js，比如 ```index.js```）
+里面写上：
+``` js
+console.log('hello, world')
+```
+保存，再打开命令行，切换到项目目录（即新文件所在目录）：
+``` bash
+node index.js
+```
+> index.js 要换成你的新文件的名字
+
+你一定看到 hello, world 了吧！
