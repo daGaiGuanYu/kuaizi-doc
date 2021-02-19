@@ -1,2 +1,62 @@
 <link rel="stylesheet" href="../style.css"/>
-<title>handler收割者</title><aside><ul></ul></aside><article></article><ul class="interpage-nav"><li class="prev"><a href="处理http请求.html">处理http请求</a></li><li class="next"><a href="异常.html">异常</a></li></ul>
+<title>handler收割者</title><aside><ul><li><a href="#section-1.1">还是不够简洁</a><ul></ul></li><li><a href="#section-1.2">使用&nbsp;router.HandlerReaper</a><ul><li><a href="#section-1.2-3.1">基本操作</a><ul></ul></li><li><a href="#section-1.2-3.2">追加&nbsp;breadList</a><ul></ul></li><li><a href="#section-1.2-3.3">追加&nbsp;path</a><ul></ul></li><li><a href="#section-1.2-3.4">使用场景</a><ul></ul></li></ul></li></ul></aside><article><section id=section-1.1><h1>还是不够简洁</h1><p><a href="三明治编程.html" title="三明治编程.html">前一章</a>的例子中，虽然把通用操作，写在了面包里，但是！
+</p><p>写了好几次&nbsp;<span class="special-txt">breadList</span>&nbsp;和&nbsp;<span class="special-txt">path</span>
+</p><p>而往往同一模块内，这些东西都是一样的
+</p><p>
+</p><p>也就是说，应该有某种方式，来避免这种重复的代码
+</p><p>
+</p></section><section id=section-1.2><h1>使用&nbsp;router.HandlerReaper</h1><section id=section-1.2-3.1><h3>基本操作</h3><p>借助&nbsp;<span class="special-txt">router.HandlerReaper</span>，之前的代码可以改写为
+</p><div class="special-block-container js"><div class="special-block-item">const { server, router } = require('kuaizi')
+</div><div class="special-block-item">
+</div><div class="special-block-item">const reap = new router.HandlerReaper({
+</div><div class="special-block-item">  path: '/user',
+</div><div class="special-block-item">  breadList: [checkLogin, checkAdmin]
+</div><div class="special-block-item">})
+</div><div class="special-block-item">
+</div><div class="special-block-item">reap({
+</div><div class="special-block-item">  handler(ctx){
+</div><div class="special-block-item">    let param = ctx.getParam()
+</div><div class="special-block-item">    return `你想获取 id 为 ${ param.id } 的用户的信息`
+</div><div class="special-block-item">  }
+</div><div class="special-block-item">})
+</div><div class="special-block-item">
+</div><div class="special-block-item">reap({
+</div><div class="special-block-item">  method: 'post',
+</div><div class="special-block-item">  async handler(ctx){
+</div><div class="special-block-item">    let data = await ctx.getJson()
+</div><div class="special-block-item">    return {
+</div><div class="special-block-item">      msg: '你似乎上传了一个用户的数据',
+</div><div class="special-block-item">      data: data
+</div><div class="special-block-item">    }
+</div><div class="special-block-item">  }
+</div><div class="special-block-item">})
+</div><div class="special-block-item">
+</div><div class="special-block-item">reap({
+</div><div class="special-block-item">  method: 'delete',
+</div><div class="special-block-item">  breadList: [checkAAAdmin],
+</div><div class="special-block-item">  handler(ctx){
+</div><div class="special-block-item">    let param = ctx.getParam()
+</div><div class="special-block-item">    return `你想删除 id 为 ${ param.id } 的用户的信息`
+</div><div class="special-block-item">  }
+</div><div class="special-block-item">})
+</div><div class="special-block-item">
+</div><div class="special-block-item">server.start(8888)
+</div></div><p>
+</p><p>第四、五行的&nbsp;<span class="special-txt">path</span>&nbsp;和&nbsp;<span class="special-txt">breadList</span>&nbsp;会被应用到下面的每一个&nbsp;handler
+</p><p>这样，当用户模块的路径变化时（比如从&nbsp;<span class="special-txt">/user</span>&nbsp;变成&nbsp;<span class="special-txt">/u</span>）、模块的权限变化时，就不用改每一个&nbsp;handler
+</p><p>
+</p></section><section id=section-1.2-3.2><h3>追加&nbsp;breadList</h3><p>上面的代码中，除了查询和上传用户，还有一个“删除用户”的&nbsp;handler
+</p><p>因为删除用户往往是危险的操作，因此需要更高的安全保障
+</p><p>第&nbsp;28&nbsp;行，声明了此&nbsp;handler&nbsp;<b>还</b>需要&nbsp;<span class="special-txt">checkAAAdmin</span>，也就是说
+</p><p>删除用户时，不仅要执行在&nbsp;<span class="special-txt">HandlerReaper</span>&nbsp;里声明的&nbsp;<span class="special-txt">checkLogin</span>&nbsp;和&nbsp;<span class="special-txt">checkAdmin</span>
+</p><p>还要执行&nbsp;<span class="special-txt">checkAAAdmin</span>
+</p><p>
+</p></section><section id=section-1.2-3.3><h3>追加&nbsp;path</h3><p>跟“追加&nbsp;breadList”一样
+</p><p>在&nbsp;handler&nbsp;里声明的&nbsp;path，会和&nbsp;HandlerReaper&nbsp;里声明的&nbsp;path&nbsp;接在一起
+</p><p>
+</p><p>比如，<span class="special-txt">new&nbsp;HandlerReaper</span>&nbsp;里的&nbsp;path&nbsp;是&nbsp;<span class="special-txt">/aaa</span>，<span class="special-txt">reap</span>&nbsp;里的&nbsp;path&nbsp;是&nbsp;<span class="special-txt">/bbb</span>
+</p><p>则添加的&nbsp;handler&nbsp;的&nbsp;path&nbsp;是&nbsp;<span class="special-txt">/aaa/bbb</span>
+</p><p>
+</p></section><section id=section-1.2-3.4><h3>使用场景</h3><p><b>同一模块的接口，往往写在一起更好一点</b>
+</p><p>因为它们需要类似的权限控制、几乎相同的&nbsp;path
+</p><p><span class="special-txt">内聚性&nbsp;+1</span>~</p></section></section></article><ul class="interpage-nav"><li class="prev"><a href="处理http请求.html">处理http请求</a></li><li class="next"><a href="异常.html">异常</a></li></ul>
