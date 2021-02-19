@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="../../style.css"/>
-<title>最简单的demo</title><aside><ul><li><a href="#section-1.1">用筷子接收请求并响应&nbsp;json&nbsp;数据</a><ul><li><a href="#section-1.1-3.1">描述请求？</a><ul></ul></li><li><a href="#section-1.1-3.2">handler</a><ul></ul></li><li><a href="#section-1.1-3.3">上码</a><ul></ul></li><li><a href="#section-1.1-3.4">http&nbsp;方法呢？</a><ul></ul></li></ul></li><li><a href="#section-1.2">解析请求里的数据</a><ul><li><a href="#section-1.2-3.4">路径参数</a><ul></ul></li><li><a href="#section-1.2-3.5">json&nbsp;数据</a><ul></ul></li></ul></li></ul></aside><article><section id=section-1.1><h1>用筷子接收请求并响应&nbsp;json&nbsp;数据</h1><section id=section-1.1-3.1><h3>描述请求？</h3><p>当提到一个请求，我们平时怎么描述？
+<title>最简单的需求</title><aside><ul><li><a href="#section-1.1">用筷子接收请求并响应&nbsp;json&nbsp;数据</a><ul><li><a href="#section-1.1-3.1">描述请求？</a><ul></ul></li><li><a href="#section-1.1-3.2">handler</a><ul></ul></li><li><a href="#section-1.1-3.3">上码</a><ul></ul></li><li><a href="#section-1.1-3.4">http&nbsp;方法呢？</a><ul></ul></li></ul></li><li><a href="#section-1.2">解析请求里的数据</a><ul><li><a href="#section-1.2-3.4">路径参数</a><ul></ul></li><li><a href="#section-1.2-3.5">json&nbsp;数据</a><ul></ul></li></ul></li></ul></aside><article><section id=section-1.1><h1>用筷子接收请求并响应&nbsp;json&nbsp;数据</h1><section id=section-1.1-3.1><h3>描述请求？</h3><p>当提到一个请求，我们平时怎么描述？
 </p><ul><li><b>路径</b>，比如&nbsp;<span class="special-txt">/home/user</span></li><li><b>方法</b>，比如&nbsp;<span class="special-txt">get</span>、<span class="special-txt">post</span>、<span class="special-txt">delete</span></li><li><b>路径参数</b>，比如&nbsp;<span class="special-txt">/home/user?id=3</span>，其中&nbsp;<span class="special-txt">id:&nbsp;3</span>&nbsp;就是路径参数</li><li><b>json&nbsp;数据</b></li><li>...</li></ul><p>
 </p></section><section id=section-1.1-3.2><h3>handler</h3><p>使用筷子时，你只需要写一个方法，然后告诉筷子：
 </p><p><b>这个方法处理什么样的请求</b>就行了
@@ -65,4 +65,23 @@
 </p><ul><li>第四行：这个&nbsp;handler&nbsp;处理路径为&nbsp;<span class="special-txt">/user</span>&nbsp;的请求</li><li>潜台词：默认处理&nbsp;<span class="special-txt">get</span>&nbsp;类型的请求</li><li>第五行：和之前不一样，这个&nbsp;handler&nbsp;多了一个参数&nbsp;<span class="special-txt">ctx</span></li><li>第六行：调用了&nbsp;ctx&nbsp;的&nbsp;getParam&nbsp;方法，<b>获取到了全部的“路径参数”</b></li><li>第七行：……</li></ul><p>
 </p><p>重新运行一下，快试试&nbsp;<a href="http://localhost:8888/user?id=2" title="http://localhost:8888/user?id=2">http://localhost:8888/user?id=2333</a>
 </p><p>
-</p></section><section id=section-1.2-3.5><h3>json&nbsp;数据</h3><p>[待完成]</p></section></section></article><ul class="interpage-nav"><li class="prev"><a href="环境准备.html">环境准备</a></li></ul>
+</p></section><section id=section-1.2-3.5><h3>json&nbsp;数据</h3><p>假如前端传来了&nbsp;json&nbsp;数据，可以这样：
+</p><div class="special-block-container js"><div class="special-block-item">const { server, router } = require('kuaizi')
+</div><div class="special-block-item">
+</div><div class="special-block-item">router.addHandler({
+</div><div class="special-block-item">  method: 'post',
+</div><div class="special-block-item">  path: '/user',
+</div><div class="special-block-item">  async handler(ctx){
+</div><div class="special-block-item">    let data = await ctx.getJson()
+</div><div class="special-block-item">    console.log(data)
+</div><div class="special-block-item">    return {
+</div><div class="special-block-item">      msg: '你似乎上传了一个用户的数据',
+</div><div class="special-block-item">      data: data
+</div><div class="special-block-item">    }
+</div><div class="special-block-item">  }
+</div><div class="special-block-item">})
+</div><div class="special-block-item">
+</div><div class="special-block-item">server.start(8888)
+</div></div><p>可以看到，ctx&nbsp;对象上还有一个&nbsp;<span class="special-txt">getJson</span>&nbsp;方法
+</p><div class="comment-container"><div class="comment-item">但这个方法是异步的</div><div class="comment-item">一般情况下，可以在调用时，前面添加&nbsp;<span class="special-txt">await</span>&nbsp;关键字；再在方法定义前，添加&nbsp;<span class="special-txt">async</span>&nbsp;关键字</div></div><p>
+</p><div class="comment-container"><div class="comment-item">可以使用&nbsp;postman&nbsp;等工具，模拟发送&nbsp;json&nbsp;数据</div></div></section></section></article><ul class="interpage-nav"><li class="prev"><a href="环境准备.html">环境准备</a></li></ul>
