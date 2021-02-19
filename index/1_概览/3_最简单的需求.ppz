@@ -100,4 +100,27 @@ server.start(8888)
 重新运行一下，快试试 [http://localhost:8888/user?id=2333](http://localhost:8888/user?id=2)
 
 ##### json 数据
-[待完成]
+假如前端传来了 json 数据，可以这样：
+``` js
+const { server, router } = require('kuaizi')
+
+router.addHandler({
+  method: 'post',
+  path: '/user',
+  async handler(ctx){
+    let data = await ctx.getJson()
+    console.log(data)
+    return {
+      msg: '你似乎上传了一个用户的数据',
+      data: data
+    }
+  }
+})
+
+server.start(8888)
+```
+可以看到，ctx 对象上还有一个 ```getJson``` 方法
+> 但这个方法是异步的
+> 一般情况下，可以在调用时，前面添加 ```await``` 关键字；再在方法定义前，添加 ```async``` 关键字
+
+> 可以使用 postman 等工具，模拟发送 json 数据
