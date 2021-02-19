@@ -41,8 +41,7 @@ server.start(8888)
 + 第三行：向 router 对象，添加了一个 handler
 + 第五~六行：是处理请求的 handler
 + 第四行：声明这个 handler 处理*路径为 ```/hello``` 的请求*
-+ 第七行：空行
-+ 第八行：启动一个 http 服务器，监听 8888 端口
++ 第十行：启动一个 http 服务器，监听 8888 端口
 
 再看刚刚的 handler，它只返回了一个字符串 ```hi yo~```
 也就是你访问过 [http://localhost:8888/hello](http://localhost:8888/hello)，所返回的

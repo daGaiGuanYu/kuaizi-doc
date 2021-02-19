@@ -1,0 +1,69 @@
+# 还是不够简洁
+[前一章](三明治编程.html)的例子中，虽然把通用操作，写在了面包里，但是！
+写了好几次 ```breadList``` 和 ```path```
+而往往同一模块内，这些东西都是一样的
+
+也就是说，应该有某种方式，来避免这种重复的代码
+
+# 使用 router.HandlerReaper
+##### 基本操作
+借助 ```router.HandlerReaper```，之前的代码可以改写为
+``` js
+const { server, router } = require('kuaizi')
+
+const reap = new router.HandlerReaper({
+  path: '/user',
+  breadList: [checkLogin, checkAdmin]
+})
+
+reap({
+  handler(ctx){
+    let param = ctx.getParam()
+    return `你想获取 id 为 ${ param.id } 的用户的信息`
+  }
+})
+
+reap({
+  method: 'post',
+  async handler(ctx){
+    let data = await ctx.getJson()
+    return {
+      msg: '你似乎上传了一个用户的数据',
+      data: data
+    }
+  }
+})
+
+reap({
+  method: 'delete',
+  breadList: [checkAAAdmin],
+  handler(ctx){
+    let param = ctx.getParam()
+    return `你想删除 id 为 ${ param.id } 的用户的信息`
+  }
+})
+
+server.start(8888)
+```
+
+第四、五行的 ```path``` 和 ```breadList``` 会被应用到下面的每一个 handler
+这样，当用户模块的路径变化时（比如从 ```/user``` 变成 ```/u```）、模块的权限变化时，就不用改每一个 handler
+
+##### 追加 breadList
+上面的代码中，除了查询和上传用户，还有一个“删除用户”的 handler
+因为删除用户往往是危险的操作，因此需要更高的安全保障
+第 28 行，声明了此 handler **还**需要 ```checkAAAdmin```，也就是说
+删除用户时，不仅要执行在 ```HandlerReaper``` 里声明的 ```checkLogin``` 和 ```checkAdmin```
+还要执行 ```checkAAAdmin```
+
+##### 追加 path
+跟“追加 breadList”一样
+在 handler 里声明的 path，会和 HandlerReaper 里声明的 path 接在一起
+
+比如，```new HandlerReaper``` 里的 path 是 ```/aaa```，```reap``` 里的 path 是 ```/bbb```
+则添加的 handler 的 path 是 ```/aaa/bbb```
+
+##### 使用场景
+**同一模块的接口，往往写在一起更好一点**
+因为它们需要类似的权限控制、几乎相同的 path
+```内聚性 +1```~

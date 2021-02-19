@@ -1,4 +1,3 @@
-
 const { server, router } = require('kuaizi')
 
 function checkLogin(handler, ctx){

@@ -2,8 +2,10 @@
 **node.js 之上的 web 后端框架**
 [github 仓库链接](https://github.com/daGaiGuanYu/kuaizi)
 
-原则：**简单**
-特点：**超轻量级**
+### 追求
++ 简单
++ 轻量级
++ 高内聚、低耦合
 
 ### 功能
 接收、解析 http 请求、响应 json 数据，是**筷子**最原始的功能
