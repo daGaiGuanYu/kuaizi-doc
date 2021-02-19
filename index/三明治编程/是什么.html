@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../style.css"/>
+<title>是什么</title><aside><ul><li><a href="#section-1.1">问题的产生</a><ul></ul></li><li><a href="#section-1.2">用“三明治”解决</a><ul></ul></li></ul></aside><article><section id=section-1.1><h1>问题的产生</h1><p>虽然每个接口都不一样，但部分功能是重叠的
+</p><p>比如，有些接口是需要登录、并且是管理员才可以调用的
+</p><p>
+</p><p>假设我们获取、上传用户数据都需要“管理员身份”
+</p><p>
+</p><p>那么获取用户数据时：
+</p><ul><li>检查是否登录</li><li>检查是否是管理员</li><li>从请求里取出“用户&nbsp;id”</li><li>从数据库获取用户数据</li><li>响应</li></ul><p>上传用户数据时：
+</p><ul><li>检查是否登录</li><li>检查是否是管理员</li><li>从请求取出“用户数据”</li><li>存到数据库</li><li>响应</li></ul><p>
+</p><p>当我们写这俩&nbsp;handler&nbsp;时，<span class="special-txt">检查登录</span>和<span class="special-txt">检查是否为管理员</span>是重复的
+</p><p>也许，项目较小时，我们可以不做特殊处理：
+</p><ul><li>把这两个检查写在“取出用户&nbsp;id”前面</li><li>然后，复制、粘贴到“上传用户数据”接口</li></ul><p>但项目大时：
+</p><ul><li>复制、粘贴，一听就，，，，，，好&nbsp;low&nbsp;啊</li><li>重复复制的代码，使项目的代码总量极具增长</li><li>当“检查是否为管理员”的逻辑变化时，不得不重新复制粘贴</li><li>……</li></ul><p>总之，我们不应该<a href="https://www.baidu.com/s?wd=%E9%87%8D%E5%A4%8D%E9%80%A0%E8%BD%AE%E5%AD%90" title="https://www.baidu.com/s?wd=%E9%87%8D%E5%A4%8D%E9%80%A0%E8%BD%AE%E5%AD%90"><b>重复造轮子</b></a>
+</p><p>
+</p></section><section id=section-1.2><h1>用“三明治”解决</h1><p>三明治编程就是要解决这种问题
+</p><div class="comment-container"><div class="comment-item">如果你没吃过三明治，至少应该也吃过肉夹馍吧</div></div><p>
+</p><p>一般情况下，不同的三明治，只是中间的“夹心”不一样
+</p><p>可以是牛肉、可以是煎鸡蛋、可以是土豆丝、鱼香肉丝……（听说还有毛血旺？）
+</p><p>可以说是变化无穷，但两边的面包一直是面包，几乎不怎么变
+</p><p>但也有一些花样：荞麦的？小麦的？烤的？软糯的？
+</p><p>
+</p><p>这种形式，用到编程里，就可以这样类比：
+</p><ul><li>通用的操作（如检查登录、检查用户身份、检查参数、捕获可能的异常）就像两边的面包</li><li>具体的操作（比如查询用户、新增用户、删除用户、更新用户……）就像里面的夹心</li></ul><p>
+</p><p>写代码时，通用的操作只写一次！</p></section></article><ul class="interpage-nav"><li class="next"><a href="筷子里的三明治编程.html">筷子里的三明治编程</a></li></ul>
