@@ -8,7 +8,7 @@
 ##### 安装 node
 **筷子**是构建在 node 上面的，因此，你需要先安装 node
 + [windows 安装包下载链接](https://nodejs.org/zh-cn/)，下载后，双击、下一步、下一步……
-+ [linux、mac 安装教程](https://blog.csdn.net/csdn372301467/article/details/85938702)
++ 一般情况下，linux 和 mac 都有 node，你只需要升级一下（高于 14 版本）：[linux、mac 安装最新 node 教程](https://blog.csdn.net/csdn372301467/article/details/85938702)
 
 ##### 初始化项目
 + 打开命令行工具（比如 windows 的 cmd），切换到你的工作目录（或者，，，，哪都行），创建一个文件夹（这个文件夹，将存放你马上要创建的项目），名字随便起

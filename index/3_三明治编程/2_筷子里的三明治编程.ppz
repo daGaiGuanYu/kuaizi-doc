@@ -1,0 +1,63 @@
+上码吧，以“获取用户数据”接口为例
+``` js
+const { server, router } = require('kuaizi')
+
+function checkLogin(handler, ctx){
+  let loginState = 通过某种方法获取登录状态()
+  if(loginState){
+    result = handler(ctx)
+    // 你可以对 result 进行一些操作，比如 result.haha = 'heihei'；也可以不进行
+    return result // 最后，你可以返回 result（给前端）
+    // return '也可以想返回什么，就返回什么'
+  } else
+    return '未登录'
+}
+
+router.addHandler({
+  path: '/user',
+  breadList: [checkLogin],
+  handler(ctx){
+    let param = ctx.getParam()
+    return `你想获取 id 为 ${ param.id } 的用户的信息`
+  }
+})
+
+server.start(8888)
+```
+
+# 定义面包
+这里，定义了一个叫 ```checkLogin``` 的面包，它接收两个参数：
++ handler，就是夹心喽
++ ctx，就是上面有 getParam 和 getJson 的那个 ctx
+
+通过某种方法检查了用户登录后，再调用 handler 处理请求
+> 别忘了把 ctx 传给 handler
+> 你可以在 checkLogin 里对 ctx 做一些操作（添加属性？修改属性？）
+
+# 使用面包
+上例中，可以看到，面包做好之后
+只需要**在添加 handler 时，把 bread 写在 breadList 里**就行了
+不需要对 handler 做任何改动
+因此，不论是 handler 改动了，还是 bread 改动了，对彼此的影响……（如果代码结构组织得好，就没影响）
+
+breadList 是一个数组，因此你可以多夹几片面包
+可以这样理解：人家的三明治里夹的是牛肉啊什么的，你的**三明治里可以夹三明治**
+
+所以你可以再写一个检查用户身份的面包，然后：
+``` js
+router.addHandler({
+  path: '/xxx',
+  breadList: [checkLogin, checkAdmin],
+  handler(ctx){
+    // ...
+  }
+})
+```
+这样，执行顺序就是：
++ checkLogin
++ checkAdmin
++ handler
++ checkAdmin
++ checkLogin
+
+是不是很像三明治呢
