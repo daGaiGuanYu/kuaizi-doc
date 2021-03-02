@@ -1,0 +1,152 @@
+nav-width = 188px
+
+special-color-r = 230
+special-color-g = 230
+special-color-b = 230
+special-font-color = rgb(special-color-r, special-color-g, special-color-b)
+
+html
+  line-height 1.5
+body, div, p, aside
+  box-sizing border-box
+
+body
+  margin 0
+  padding 0
+  position relative
+
+aside
+  overflow-y auto
+  padding 2rem 1rem;
+
+  position fixed
+  top 0
+  left 0
+  width nav-width
+  height 100vh
+
+  ul
+    margin 0 0 0 1rem
+    padding 0
+    list-style none
+  a
+    width 100%
+    display block
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+.ancestor-nav
+  ul
+    margin 0
+    padding 0
+    list-style none
+    font-size 0.8rem
+    margin 1rem 2rem 0 0
+    text-align right
+  li
+    margin 0
+    padding 0
+    display inline-block
+    a
+      display inline-block
+      opacity 0.66
+      transition all 0.3s
+      &:hover
+        opacity 1
+        transform scale(1.1, 1.1)
+    &:not(.self)::after
+      content '/'
+      margin 0 .36rem
+
+article
+  margin-left nav-width
+  padding 1px 2rem 1rem 1rem
+h1
+  font-size 2rem
+h2
+  font-size 1.3rem
+h3
+  font-size 1.1rem
+  opacity 0.9
+
+h1, h2, h3
+  &::before
+    content '# '
+    opacity 0.3
+    font-size 1rem
+
+.comment-container
+  margin 1rem 0
+  padding 1rem 1.6rem
+  background rgba(0, 0, 0, 0.2)
+  font-size 0.9rem
+  border-radius 4px
+.comment-item
+  opacity 0.8
+
+.special-block-container
+  background #141c22
+  overflow auto
+  border-radius 4px
+  color special-font-color
+  line-height 1.6
+  position relative 
+  
+  font-family monospace
+  white-space pre
+
+  margin 1rem 0
+  padding 1.3rem 3.6rem
+  counter-reset line-index 1
+  li
+    &::before
+      counter-increment line-index
+      content ''
+    &::marker
+      content counter(line-index) " | "
+      color rgba(special-color-r, special-color-g, special-color-b, 0.3)
+      text-align right
+
+    &:hover::marker
+      color special-font-color
+  button.copy
+    position absolute
+    right 1rem
+    top 1rem
+
+    cursor pointer
+    background url(../img/copy20.png)
+    width 20px
+    height 20px
+    outline none
+    border none
+    opacity 0.5
+    &:hover
+      opacity 0.8
+    &:active
+      opacity 1
+
+.special-txt
+  background rgba(27, 31, 35, 0.05)
+  border-radius 4px
+  font-size 0.9em
+  padding 2px 4px
+
+.interpage-nav
+  margin 1rem 2rem 2rem nav-width
+  padding 0 2rem
+  list-style none
+  .prev
+    float left
+    &::before
+      content '上一篇：'
+      opacity 0.6
+  .next
+    float right
+    &::before
+      content '下一篇：'
+      opacity 0.6
+  &::after
+    content ''
+    display block
+    clear both

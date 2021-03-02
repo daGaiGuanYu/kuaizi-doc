@@ -94,20 +94,44 @@ h3::before {
   background: #141c22;
   overflow: auto;
   border-radius: 4px;
-  color: #eee;
+  color: #e6e6e6;
+  line-height: 1.6;
+  position: relative;
   font-family: monospace;
   white-space: pre;
   margin: 1rem 0;
-  padding: 1rem;
-  counter-reset: line-index;
+  padding: 1.3rem 3.6rem;
+  counter-reset: line-index 1;
 }
-.special-block-item::before {
+.special-block-container li::before {
   counter-increment: line-index;
-  content: counter(line-index) " |  ";
-  opacity: 0.3;
+  content: '';
 }
-.special-block-item:hover::before {
+.special-block-container li::marker {
+  content: counter(line-index) " | ";
+  color: rgba(230,230,230,0.3);
+  text-align: right;
+}
+.special-block-container li:hover::marker {
+  color: #e6e6e6;
+}
+.special-block-container button.copy {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  cursor: pointer;
+  background: url("../img/copy20.png");
+  width: 20px;
+  height: 20px;
+  outline: none;
+  border: none;
+  opacity: 0.5;
+}
+.special-block-container button.copy:hover {
   opacity: 0.8;
+}
+.special-block-container button.copy:active {
+  opacity: 1;
 }
 .special-txt {
   background: rgba(27,31,35,0.05);
